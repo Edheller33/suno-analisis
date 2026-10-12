@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Análisis Suno · Hit vs Unicornio",
+  "short_name": "Análisis Suno",
+  "description": "Clasificación comercial, unicornios sónicos y valoración en MXN de canciones de Suno AI. Funciona sin conexión.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0C0E",
+  "theme_color": "#0B0C0E",
+  "lang": "es",
+  "categories": ["music", "productivity"],
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
