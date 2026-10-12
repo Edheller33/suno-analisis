@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0C0E"><meta name="color-scheme" content="dark">
+<meta name="description" content="Análisis profesional de canciones Suno AI: clasificación comercial, unicornios sónicos y valoración en MXN. Funciona sin conexión.">
+<title>Análisis Suno · Hit vs Unicornio</title>
+<link rel="icon" id="fav" href="data:,"><link rel="apple-touch-icon" id="ati" href="data:,">
+<style>
+/* PASEF · UXEM/UIEM: un solo sistema de diseño (tokens) */
+:root{--ink:#0B0C0E;--panel:#16181D;--panel2:#1E2128;--line:rgba(201,162,39,.25);--gold:#C9A227;--gt:#E9D9A0;--bone:#EDE6D3;--mut:#B2AC9C;--cy:#4FB3C8;--ro:#D77AA6;--ok:#6CCB9B;--bad:#E58B6A;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--bone);font:16px/1.5 system-ui,-apple-system,Roboto,sans-serif}
+body{padding:calc(var(--st) + 12px) 14px calc(84px + var(--sb));max-width:760px;margin:auto}
+h1{font:700 1.45rem/1.2 Georgia,serif;margin:6px 0 2px;color:var(--gt)}h2{font:700 1.15rem Georgia,serif;color:var(--gt);margin:20px 0 8px}h3{margin:14px 0 6px;font-size:1rem;color:var(--gt)}
+p,.mut{color:var(--mut);margin:4px 0}.sm{font-size:.82rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+label{display:grid;gap:3px;font-size:.82rem;color:var(--mut);margin:8px 0}
+input,select,textarea,button{font:inherit;color:var(--bone)}
+input:not([type=range]),select,textarea{width:100%;min-height:44px;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--panel2)}
+input[type=file]{padding:8px}input[type=range]{width:100%;accent-color:var(--gold)}
+button{min-height:46px;padding:0 16px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);cursor:pointer}
+button.pri{background:linear-gradient(135deg,var(--gold),#8F6D1C);color:#17110A;font-weight:700;border-color:var(--gold)}button:disabled{opacity:.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);color:var(--gt)}
+.pill.hit{color:#FFB86B;border-color:#FFB86B}.pill.uni{color:var(--ro);border-color:var(--ro)}.pill.com{color:var(--cy);border-color:var(--cy)}.pill.win{background:var(--gold);color:#17110A;border-color:var(--gold)}
+.bar{height:8px;border-radius:5px;background:var(--panel2);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cy),var(--gold),var(--ro))}
+.dim{margin:9px 0}.dim .t{display:flex;justify-content:space-between;font-size:.9rem}.ok{color:var(--ok)}.bad{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:6px 5px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--gt)}
+.wrap{overflow-x:auto}details{margin:8px 0}summary{cursor:pointer;min-height:40px;display:flex;align-items:center;color:var(--gt)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#0E1013;border-top:1px solid var(--line);padding-bottom:var(--sb);z-index:9}
+nav button{flex:1;border:0;border-radius:0;background:none;min-height:56px;font-size:.78rem;color:var(--mut)}nav button.on{color:var(--gold);font-weight:700}
+.sec{display:none}.sec.on{display:block}.warn{border-left:3px solid var(--bad);padding:8px 12px;background:rgba(229,139,106,.08);border-radius:8px;font-size:.82rem;color:var(--mut);margin:10px 0}
+@media print{body{background:#fff;color:#000;padding:0}.card,.warn{border-color:#999;background:#fff}nav,.noprint{display:none!important}.sec{display:block!important}#s-cargar,#s-precios{display:none!important}h1,h2,h3,.dim .t,th{color:#000}p,.mut,label{color:#333}.bar{background:#ddd}}
+</style></head><body>
+<h1>Análisis de canciones Suno AI</h1><p class="sm">Clasificación comercial · Unicornio sónico · Valor en MXN. Todo se procesa en tu teléfono; los audios no se envían a ningún servidor.</p>
+
+<section class="sec on" id="s-cargar">
+ <div class="warn">Sube hasta 5 canciones con su Versión A y B (MP3). Los audios se analizan en el dispositivo y no se guardan: solo se conservan los resultados.</div>
+ <div id="slots"></div>
+ <button class="pri" id="go" style="width:100%">Analizar canciones</button>
+ <div class="bar" style="margin:10px 0"><i id="pg" style="width:0"></i></div><p id="msg" class="sm"></p>
+</section>
+
+<section class="sec" id="s-result"><div id="res"></div></section>
+
+<section class="sec" id="s-precios">
+ <h2>Tabla de precios de mercado (MXN)</h2>
+ <p class="sm">Valores iniciales de referencia, editables. Actualízalos con tu mercado. <b id="pdate"></b></p><div id="ptab"></div>
+ <button class="pri" id="psave" style="width:100%">Guardar precios y fecha de revisión</button>
+ <button id="preset" style="width:100%;margin-top:8px">Restablecer valores iniciales</button>
+</section>
+
+<section class="sec" id="s-resumen"><div id="sum"></div>
+ <div class="chips noprint"><button class="pri" id="xpdf">Exportar PDF</button><button id="xcsv">CSV</button><button id="xjson">JSON</button><button id="xclr">Borrar resultados</button></div>
+ <div class="warn">El análisis es una evaluación técnica y orientativa, no una garantía de éxito comercial. Los precios son estimaciones sujetas a cambios del mercado. La protección legal y la titularidad dependen de los términos de Suno AI y de las leyes de propiedad intelectual de cada país.</div>
+</section>
+<nav><button data-t="cargar" class="on">Cargar</button><button data-t="result">Resultados</button><button data-t="precios">Precios</button><button data-t="resumen">Resumen</button></nav>
+
+<script>
+(()=>{'use strict';
+const $=i=>document.getElementById(i),el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cl=(x,a=0,b=100)=>Math.max(a,Math.min(b,x)),tri=(x,lo,a,b,hi)=>x<=lo||x>=hi?0:x<a?(x-lo)/(a-lo):x<=b?1:(hi-x)/(hi-b);
+const LS={g:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(_){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+const mxn=n=>'$'+Math.round(n).toLocaleString('es-MX');
+const GEN={'':null,'Corrido':[80,135],'Banda':[90,150],'Cumbia':[85,115],'Reggae':[60,95],'Rock':[100,165],'Pop':[90,135],'Urbano / Reggaetón':[85,105],'Electrónica':[118,138],'Balada':[60,85]};
+const DIMS=['Estructura','Gancho melódico','Armonía y ritmo','Voz y letra','Producción y mezcla','Identidad sonora','Ajuste al género','Potencial en plataformas'];
+const REC=['Acorta la intro o adelanta el primer coro; cuida que dure entre 2:30 y 4:30.','Repite más el motivo principal y haz que el coro contraste en energía con los versos.','Define mejor el pulso y ajusta el tempo a las convenciones del género.','Revisa claridad y emoción de la voz; regenera con un prompt de letra más natural.','Corrige volumen, clipping o balance de graves y agudos en la mezcla o masterización.','Añade un timbre, textura o arreglo propio que diferencie la canción.','Acércala al tempo y color tonal típicos del género elegido.','Ajusta duración, volumen y gancho temprano para streaming, redes y radio.'];
+/* ───── Precios (editable) ───── */
+const P0={empresas:{comercial:[1500,4000],premium:[4000,9000],exclusiva:[9000,15000]},personas:{personal:[100,200],comercial:[200,450],premium:[450,900],exclusiva:[900,2500]},bandas:{comercial:[800,2500],premium:[2500,6000],exclusiva:[6000,15000]}};
+const SEG={empresas:'Empresas de música',personas:'Personas comunes',bandas:'Grupos o bandas'};
+let P=LS.g('sua_price',null)||{d:'valores iniciales sin revisar',t:JSON.parse(JSON.stringify(P0))};
+/* ───── FFT y extracción de características (Web Audio) ───── */
+function fft(re,im){const n=re.length;for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t}}
+ for(let len=2;len<=n;len<<=1){const a=-2*Math.PI/len,wr=Math.cos(a),wi=Math.sin(a);for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let k=0;k<len/2;k++){const u=i+k,v=u+len/2,xr=re[v]*cr-im[v]*ci,xi=re[v]*ci+im[v]*cr;re[v]=re[u]-xr;im[v]=im[u]-xi;re[u]+=xr;im[u]+=xi;const t=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=t}}}}
+const yieldUI=()=>new Promise(r=>setTimeout(r,0)),mean=a=>a.reduce((x,y)=>x+y,0)/(a.length||1),std=a=>{const m=mean(a);return Math.sqrt(mean(a.map(x=>(x-m)**2)))};
+async function extract(buf){
+ const sr=buf.sampleRate,L=buf.getChannelData(0),R=buf.numberOfChannels>1?buf.getChannelData(1):L,n=L.length,dur=buf.duration,hop=Math.floor(sr/2);
+ let pk=0,clip=0,ss=0,ll=0,rr=0,lr=0;const rms=[];let acc=0,cnt=0;
+ for(let i=0;i<n;i++){const m=(L[i]+R[i])*.5,a=Math.abs(m);if(a>pk)pk=a;if(Math.abs(L[i])>=.999)clip++;ss+=m*m;acc+=m*m;if(++cnt===hop){rms.push(10*Math.log10(acc/cnt+1e-12));acc=0;cnt=0}if((i&3)===0){ll+=L[i]*L[i];rr+=R[i]*R[i];lr+=L[i]*R[i]}}
+ const corr=buf.numberOfChannels>1?lr/Math.sqrt(ll*rr+1e-12):1,rmsdB=10*Math.log10(ss/n+1e-12),pkdB=20*Math.log10(pk+1e-9);
+ const srt=[...rms].sort((a,b)=>a-b),q=p=>srt[Math.floor(p*(srt.length-1))],dr=q(.95)-q(.1);
+ /* tempo: envolvente de onsets + autocorrelación */
+ const B=512,en=[];const lim=Math.min(n,sr*120);for(let i=B;i+B<lim;i+=B){let e=0;for(let k=0;k<B;k++)e+=Math.abs(((L[i+k]+R[i+k])-(L[i+k-1]+R[i+k-1]))*.5);en.push(e)}
+ const on=en.map((e,i)=>i?Math.max(0,e-en[i-1]):0),mo=mean(on);const o=on.map(x=>x-mo);let r0=0;for(const x of o)r0+=x*x;
+ let best=0,bl=0;const fr=sr/B;for(let bpm=65;bpm<=175;bpm+=.5){const lag=Math.round(60/bpm*fr);let s=0;for(let i=0;i+lag<o.length;i++)s+=o[i]*o[i+lag];s/=(o.length-lag);if(s>best){best=s;bl=bpm}}
+ const clar=r0>0?best/(r0/o.length):0;await yieldUI();
+ /* espectro cada 0.5 s: 6 bandas + centroide + banda vocal */
+ const N=2048,re=new Float32Array(N),im=new Float32Array(N),win=new Float32Array(N).map((_,i)=>.5-.5*Math.cos(2*Math.PI*i/N));
+ const ed=[20,60,250,500,2000,6000,16000],bands=[],cent=[];let voc=0,tot=0;
+ for(let t=0,f=0;t*sr+N<n;t+=.5,f++){const s0=Math.floor(t*sr);for(let i=0;i<N;i++){re[i]=(L[s0+i]+R[s0+i])*.5*win[i];im[i]=0}fft(re,im);
+  const b=new Float32Array(6);let cs=0,cw=0;for(let k=1;k<N/2;k++){const fq=k*sr/N,p=re[k]*re[k]+im[k]*im[k];cs+=fq*p;cw+=p;if(fq>=300&&fq<=3400)voc+=p;tot+=p;for(let j=0;j<6;j++)if(fq>=ed[j]&&fq<ed[j+1]){b[j]+=p;break}}
+  bands.push(b);cent.push(cw>0?cs/cw:0);if(f%60===59)await yieldUI()}
+ const nb=bands.map(b=>{const d=[...b].map(x=>10*Math.log10(x+1e-9)),m=mean(d),v=d.map(x=>x-m),nr=Math.hypot(...v)||1;return v.map(x=>x/nr)});
+ let flux=0;for(let i=1;i<nb.length;i++)flux+=Math.hypot(...nb[i].map((x,k)=>x-nb[i-1][k]));flux=nb.length>1?flux/(nb.length-1)*10:0;
+ /* repetición (gancho): similitud coseno entre frames separados ≥12 s */
+ let mt=0;const V=nb.filter((_,i)=>i%2===0);for(let i=0;i<V.length;i++){for(let j=0;j<V.length;j++){if(Math.abs(i-j)<12)continue;let c=0;for(let k=0;k<6;k++)c+=V[i][k]*V[j][k];if(c>.97){mt++;break}}}
+ const rep=V.length?mt/V.length:0;
+ /* estructura: energía suavizada 4 s → primer coro y nº de secciones */
+ const sm=rms.map((_,i)=>mean(rms.slice(Math.max(0,i-4),i+4))),med=sm.length?[...sm].sort((a,b)=>a-b)[sm.length>>1]:0;let fc=null;
+ for(let i=16;i<sm.length-12;i++){const a=mean(sm.slice(i-16,i)),b=mean(sm.slice(i,i+12));if(b>a+1.5&&b>=med){fc=i*.5;break}}
+ let secs=1,st=sm[0]>med,run=0;for(let i=1;i<sm.length;i++){const s=sm[i]>med;if(s!==st){if(++run>=8){secs++;st=s;run=0}}else run=0}
+ return{dur,rmsdB,pkdB,clip:clip/n,corr,dr,bpm:bl,clar,cent:mean(cent),centSd:std(cent)/(mean(cent)||1),voc:tot?voc/tot:0,flux,rep,fc,secs,sdE:std(sm),mono:buf.numberOfChannels<2}}
+/* ───── Puntuación por dimensión (heurística transparente) ───── */
+function score(f,meta,manual){
+ const g=GEN[meta.genero||''],D=[];const add=(s,w)=>D.push({s:Math.round(cl(s)),w});
+ const dS=tri(f.dur,60,150,260,420),cS=f.fc==null?.4:tri(f.fc,0,6,40,90),sS=tri(f.secs,1,3,8,14);
+ add(100*(.4*dS+.3*cS+.3*sS),`Duración ${Math.floor(f.dur/60)}:${String(Math.round(f.dur%60)).padStart(2,'0')}; ${f.fc==null?'no se detectó claramente el primer coro':'primer coro ≈ '+Math.round(f.fc)+' s'}; ~${f.secs} secciones de energía.`);
+ add(100*(.6*tri(f.rep,.1,.35,.8,.98)+.4*tri(f.sdE,.5,2,6,12)),`Repetición del material musical ${Math.round(f.rep*100)}% y contraste de energía ${f.sdE.toFixed(1)} dB.`);
+ const bS=g?tri(f.bpm,g[0]-25,g[0],g[1],g[1]+25):tri(f.bpm,55,75,150,190);
+ add(100*(.4*cl((f.clar-.05)/.35,0,1)+.3*bS+.3*tri(f.dr,2,5,14,24)),`Tempo ≈ ${Math.round(f.bpm)} BPM, pulso ${f.clar>.3?'claro':'poco marcado'}, rango dinámico ${f.dr.toFixed(1)} dB.`);
+ const vh=100*(.8*tri(f.voc,.1,.25,.6,.9)+.2*tri(f.centSd,.05,.1,.4,.9));
+ add(manual!=null?manual:vh,manual!=null?`Valor manual del analista (estimado automático: ${Math.round(vh)}).`:`Estimación por energía en banda vocal (${Math.round(f.voc*100)}%). La letra y emoción no se miden automáticamente: ajústalo a tu criterio.`);
+ const cr=1-cl(f.clip/.002,0,1);
+ add(100*(.3*tri(f.rmsdB,-30,-17,-9,-3)+.15*(f.pkdB<=-.1?1:.3)+.2*cr+.25*tri(f.cent,500,1200,3200,5500)+.1*(f.mono?.7:f.corr>0?1:.4)),`Volumen RMS ${f.rmsdB.toFixed(1)} dBFS, pico ${f.pkdB.toFixed(1)} dBFS, saturación ${(f.clip*100).toFixed(3)}%, brillo ${Math.round(f.cent)} Hz.`);
+ add(100*(.4*tri(f.centSd,.04,.15,.5,.95)+.3*tri(f.flux,.4,1.5,8,20)+.3*tri(f.sdE,.4,1.5,7,14)),`Variedad tímbrica ${f.centSd.toFixed(2)}, cambio espectral ${f.flux.toFixed(1)} y dinámica de arreglo ${f.sdE.toFixed(1)} dB (indicadores de identidad, orientativos).`);
+ add(g?100*(.6*bS+.4*tri(f.cent,400,900,3800,6500)):60,g?`Tempo y color tonal frente al perfil típico de ${meta.genero}.`:'Sin género indicado: valor neutro. Elige un género para afinarlo.');
+ const L1=tri(f.rmsdB,-24,-15,-8,-3),str=100*(.5*L1+.3*tri(f.dur,90,140,270,420)+.2*(f.fc==null?.5:tri(f.fc,0,0,45,100))),soc=100*(.5*(f.fc==null?.4:tri(f.fc,0,0,20,60))+.3*tri(f.rep,.1,.3,.9,1)+.2*tri(f.dur,20,60,200,420)),rad=100*(.5*tri(f.dur,120,150,240,330)+.5*L1),syn=100*(.4*cr+.3*tri(f.dr,3,7,16,26)+.3*tri(f.secs,1,3,10,16));
+ const plat={Streaming:str,Redes:soc,Radio:rad,Sincronización:syn};add(mean(Object.values(plat)),`Streaming ${Math.round(str)} · Redes ${Math.round(soc)} · Radio ${Math.round(rad)} · Sync ${Math.round(syn)}.`);
+ const s=D.map(d=>d.s),W=[.12,.2,.12,.1,.2,0,.1,.16];
+ const com=Math.round(s.reduce((a,v,i)=>a+v*W[i],0)),uni=Math.round(.65*s[5]+.2*s[3]+.15*s[4]);
+ const cls=com>=80&&s[1]>=75?'Hit comercial':(uni>=72&&s[5]>=70)?'Unicornio sónico':'Comercial';
+ const ix=s.map((v,i)=>[v,i]).filter(x=>x[1]!==5).sort((a,b)=>b[0]-a[0]);
+ return{dims:D.map((d,i)=>({n:DIMS[i],s:d.s,why:d.w})),com,uni,cls,fort:ix.slice(0,2).map(x=>x[1]),deb:ix.slice(-2).map(x=>x[1]),plat:Object.fromEntries(Object.entries(plat).map(([k,v])=>[k,Math.round(v)]))}}
+function valor(seg,sc){const cls=sc.cls,idx=cls==='Unicornio sónico'?sc.uni:sc.com;let lic=cls==='Hit comercial'?'premium':cls==='Unicornio sónico'?'exclusiva':'comercial';if(seg==='personas'&&cls==='Comercial'&&sc.com<55)lic='personal';
+ const [lo,hi]=(P.t[seg][lic]||P.t[seg].comercial),t=cl((idx-40)/60,0,1),r=x=>Math.round(x/50)*50;return{lic,min:r(lo+(hi-lo)*Math.max(0,t-.25)),max:r(lo+(hi-lo)*Math.min(1,t+.25)),why:`Licencia ${lic} sugerida por clasificación «${cls}» y puntaje ${idx}/100 dentro del rango de tu tabla (${mxn(lo)}–${mxn(hi)}).`}}
+/* ───── Carga y validación ───── */
+const NS=5;let slots=[];const seen=new Map();let ac=null;
+function build(){const box=$('slots');for(let i=0;i<NS;i++){const c=el('div','card',`<h3>Canción ${i+1}</h3><label>Título (opcional)<input data-k="titulo" placeholder="Canción ${i+1}"></label>
+ <div class="row"><label>Género<select data-k="genero">${Object.keys(GEN).map(g=>`<option value="${g}">${g||'— Sin indicar —'}</option>`).join('')}</select></label><label>Idioma<input data-k="idioma" placeholder="Español"></label></div>
+ <label>Público objetivo<input data-k="publico"></label><label>Prompt original de Suno<textarea data-k="prompt" rows="2"></textarea></label>
+ <div class="row"><label>Versión A (MP3)<input type="file" accept="audio/mpeg,.mp3" data-v="A"></label><label>Versión B (MP3)<input type="file" accept="audio/mpeg,.mp3" data-v="B"></label></div><p class="sm" data-s></p>`);
+ box.appendChild(c);slots.push({c,files:{}});
+ c.querySelectorAll('input[type=file]').forEach(inp=>inp.onchange=()=>pick(i,inp))}}
+function pick(i,inp){const v=inp.dataset.v,f=inp.files[0],S=slots[i],ex=S.files[v];if(ex)seen.delete(ex.key);delete S.files[v];if(!f){upd(i);return}
+ const key=f.name+'|'+f.size,err=!(/\.mp3$/i.test(f.name)||f.type==='audio/mpeg')?'no es MP3':f.size<100e3?'archivo demasiado pequeño':f.size>40e6?'supera 40 MB':seen.has(key)?'archivo duplicado (ya cargado)':'';
+ if(err){inp.value='';S.c.querySelector('[data-s]').innerHTML=`<span class="bad">Versión ${v}: ${err}.</span>`;return}
+ seen.set(key,1);S.files[v]={f,key};upd(i)}
+function upd(i){const S=slots[i],a=S.files.A,b=S.files.B;S.c.querySelector('[data-s]').innerHTML=a&&b?'<span class="ok">Par A/B listo.</span>':(a||b)?'<span class="bad">Falta la otra versión: se analizará sola, sin comparación.</span>':'Sin archivos.'}
+async function decode(f){ac=ac||new(window.AudioContext||window.webkitAudioContext)();const b=await ac.decodeAudioData(await f.arrayBuffer());if(b.duration<20||b.duration>600)throw new Error('duración fuera de 20 s – 10 min');return b}
+$('go').onclick=async()=>{const jobs=[];slots.forEach((S,i)=>['A','B'].forEach(v=>S.files[v]&&jobs.push([i,v])));if(!jobs.length){$('msg').textContent='Carga al menos un MP3.';return}
+ $('go').disabled=true;const res=Array.from({length:NS},()=>null);
+ for(let j=0;j<jobs.length;j++){const [i,v]=jobs[j],S=slots[i];$('msg').textContent=`Analizando canción ${i+1} · versión ${v} (${j+1}/${jobs.length})…`;$('pg').style.width=(j/jobs.length*100)+'%';await yieldUI();
+  try{const buf=await decode(S.files[v].f),f=await extract(buf);res[i]=res[i]||{meta:Object.fromEntries([...S.c.querySelectorAll('[data-k]')].map(e=>[e.dataset.k,e.value.trim()])),v:{}};res[i].v[v]={f,nombre:S.files[v].f.name,manual:null}}
+  catch(e){$('msg').innerHTML=`<span class="bad">Canción ${i+1} ${v}: ${esc(e.message||'no se pudo decodificar')}.</span>`}}
+ $('pg').style.width='100%';LS.s('sua_res',res.map((r,i)=>r&&Object.assign(r,{n:i+1})).filter(Boolean));$('go').disabled=false;$('msg').textContent='Análisis completo.';render();show('result')};
+/* ───── Resultados ───── */
+const RES=()=>LS.g('sua_res',[]);
+function evalSong(r){const o={};for(const v of Object.keys(r.v))o[v]=score(r.v[v].f,r.meta,r.v[v].manual);const k=Object.keys(o);let w=k[0];if(k.length>1)w=o.A.com>=o.B.com?'A':'B';return{o,w,uniV:k.length>1?(o.A.uni>=o.B.uni?'A':'B'):k[0]}}
+const pill=c=>`<span class="pill ${c==='Hit comercial'?'hit':c==='Unicornio sónico'?'uni':'com'}">${c}</span>`;
+function render(){const R=RES(),box=$('res');box.innerHTML='';if(!R.length){box.innerHTML='<p class="card">Aún no hay resultados. Carga canciones en la pestaña «Cargar».</p>';$('sum').innerHTML='';return}
+ R.forEach((r,ri)=>{const E=evalSong(r),t=r.meta.titulo||`Canción ${r.n}`,c=el('div','card');let h=`<h2 style="margin-top:0">${esc(t)} ${r.meta.genero?`<span class="mut sm">· ${esc(r.meta.genero)}</span>`:''}</h2>`;
+  if(E.o.A&&E.o.B)h+=`<p>Versión ganadora: <span class="pill win">Versión ${E.w}</span> (comercial ${E.o[E.w].com} vs ${E.o[E.w==='A'?'B':'A'].com}). Mayor perfil de unicornio: <b>Versión ${E.uniV}</b> (${E.o[E.uniV].uni}).</p>`;
+  Object.keys(E.o).forEach(v=>{const s=E.o[v],nm=r.v[v].nombre;h+=`<details ${v===E.w?'open':''}><summary>Versión ${v} ${pill(s.cls)} &nbsp;<span class="mut sm">Com ${s.com} · Uni ${s.uni}</span></summary><p class="sm">${esc(nm)}</p>`;
+   s.dims.forEach((d,i)=>{h+=`<div class="dim"><div class="t"><span>${d.n}</span><b>${d.s}</b></div><div class="bar"><i style="width:${d.s}%"></i></div><p class="sm">${esc(d.why)}</p>${i===3?`<input type="range" min="0" max="100" value="${d.s}" data-r="${ri}|${v}">`:''}</div>`});
+   h+=`<p><b class="ok">Fortalezas:</b> ${s.fort.map(i=>DIMS[i]).join(', ')}.</p><p><b class="bad">Debilidades:</b> ${s.deb.map(i=>DIMS[i]).join(', ')}.</p><p class="sm"><b>Recomendaciones:</b> ${s.deb.map(i=>REC[i]).join(' ')}</p>
+   <div class="wrap"><table><tr><th>Comprador</th><th>Rango MXN</th><th>Licencia</th></tr>${Object.keys(SEG).map(g=>{const x=valor(g,s);return`<tr><td>${SEG[g]}<br><span class="mut">${esc(x.why)}</span></td><td>${mxn(x.min)} – ${mxn(x.max)}</td><td>${x.lic}</td></tr>`}).join('')}</table></div></details>`});
+  c.innerHTML=h;box.appendChild(c)});
+ box.querySelectorAll('[data-r]').forEach(inp=>inp.onchange=()=>{const [ri,v]=inp.dataset.r.split('|'),R2=RES();R2[ri].v[v].manual=+inp.value;LS.s('sua_res',R2);render();show('result')});
+ /* comparativo, ranking y resumen */
+ const rows=[];R.forEach(r=>{const E=evalSong(r);Object.keys(E.o).forEach(v=>rows.push({t:r.meta.titulo||`Canción ${r.n}`,v,s:E.o[v],win:E.w===v,emp:valor('empresas',E.o[v])}))});
+ const rk=[...rows].filter(x=>x.win).sort((a,b)=>b.s.com-a.s.com),cnt={};rows.forEach(x=>cnt[x.s.cls]=(cnt[x.s.cls]||0)+1);
+ const top=rk.slice(0,3).map(x=>`${esc(x.t)} (V.${x.v}, ${x.s.com})`).join('; '),uni=rows.filter(x=>x.s.cls==='Unicornio sónico').map(x=>`${esc(x.t)} V.${x.v}`);
+ $('sum').innerHTML=`<h2>Resumen ejecutivo</h2><div class="card"><p>Se analizaron <b>${rows.length}</b> versiones de <b>${R.length}</b> canciones. Clasificación: ${Object.entries(cnt).map(([k,v])=>`${v} ${k}`).join(', ')}.</p><p>Mejores versiones comerciales: ${top||'—'}.</p><p>Perfiles de unicornio sónico: ${uni.length?uni.join(', '):'ninguno alcanzó el umbral (identidad ≥70 y perfil ≥72)'}.</p><p class="sm">Uso recomendado: las versiones Hit y Comercial para licencias de uso comercial y sincronización; las de perfil unicornio para licencia premium o exclusiva, donde la singularidad justifica un precio mayor. Antes de vender, escucha cada pieza: los puntajes son una guía técnica, no sustituyen el oído.</p></div>
+ <h2>Ranking de mejores versiones</h2><div class="card"><ol>${rk.map(x=>`<li>${esc(x.t)} · V.${x.v} · ${pill(x.s.cls)} · <b>${x.s.com}</b></li>`).join('')}</ol></div>
+ <h2>Cuadro comparativo</h2><div class="card wrap"><table><tr><th>Canción</th><th>V</th><th>Clase</th><th>Com</th><th>Uni</th><th>Empresas (MXN)</th></tr>${rows.map(x=>`<tr><td>${esc(x.t)}${x.win?' ★':''}</td><td>${x.v}</td><td>${x.s.cls}</td><td>${x.s.com}</td><td>${x.s.uni}</td><td>${mxn(x.emp.min)}–${mxn(x.emp.max)}</td></tr>`).join('')}</table></div>`;
+ window.__rows=rows}
+/* ───── Precios UI ───── */
+function pui(){$('pdate').textContent='Última revisión: '+P.d;$('ptab').innerHTML=Object.keys(SEG).map(g=>`<div class="card"><h3 style="margin-top:0">${SEG[g]}</h3>${Object.keys(P.t[g]).map(l=>`<div class="row"><label>${l} · mín<input type="number" min="0" inputmode="numeric" data-p="${g}|${l}|0" value="${P.t[g][l][0]}"></label><label>${l} · máx<input type="number" min="0" inputmode="numeric" data-p="${g}|${l}|1" value="${P.t[g][l][1]}"></label></div>`).join('')}</div>`).join('')}
+$('psave').onclick=()=>{document.querySelectorAll('[data-p]').forEach(i=>{const[g,l,k]=i.dataset.p.split('|');P.t[g][l][k]=Math.max(0,+i.value||0)});for(const g in P.t)for(const l in P.t[g])if(P.t[g][l][0]>P.t[g][l][1])P.t[g][l].reverse();P.d=new Date().toLocaleDateString('es-MX',{dateStyle:'long'});LS.s('sua_price',P);pui();render();$('pdate').textContent+=' ✓ guardado'};
+$('preset').onclick=()=>{if(confirm('¿Restablecer los precios iniciales?')){P={d:'valores iniciales sin revisar',t:JSON.parse(JSON.stringify(P0))};LS.s('sua_price',P);pui();render()}};
+/* ───── Exportar ───── */
+const dl=(n,t,m)=>{const a=el('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;document.body.appendChild(a);a.click();a.remove()};
+$('xpdf').onclick=()=>{show('result');setTimeout(()=>print(),150)};
+$('xjson').onclick=()=>dl('analisis_suno.json',JSON.stringify({precios:P,resultados:RES()},null,1),'application/json');
+$('xcsv').onclick=()=>{const q=s=>'"'+String(s).replace(/"/g,'""')+'"';dl('analisis_suno.csv','\ufeff'+['Canción,Versión,Ganadora,Clase,Comercial,Unicornio,Empresas mín,Empresas máx',...(window.__rows||[]).map(x=>[q(x.t),x.v,x.win?'sí':'no',x.s.cls,x.s.com,x.s.uni,x.emp.min,x.emp.max].join(','))].join('\n'),'text/csv')};
+$('xclr').onclick=()=>{if(confirm('¿Borrar todos los resultados guardados en este dispositivo?')){localStorage.removeItem('sua_res');render()}};
+/* ───── Navegación, iconos, PWA offline ───── */
+function show(t){document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==='s-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.t));
+(function pwa(){const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');x.fillStyle='#0B0C0E';x.fillRect(0,0,512,512);const g=x.createLinearGradient(0,0,512,512);g.addColorStop(0,'#4FB3C8');g.addColorStop(.5,'#C9A227');g.addColorStop(1,'#D77AA6');x.fillStyle=g;[60,140,220,150,90].forEach((h,i)=>{x.fillRect(110+i*60,300-h*1.2,38,h*1.2+60)});
+ const u=c.toDataURL('image/png');$('fav').href=u;$('ati').href=u;
+ const m={name:'Análisis Suno · Hit vs Unicornio',short_name:'Análisis Suno',start_url:'./',display:'standalone',background_color:'#0B0C0E',theme_color:'#0B0C0E',lang:'es',icons:[{src:u,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+ const l=el('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l);
+ if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))})();
+build();pui();render();
+})();
+</script></body></html>
